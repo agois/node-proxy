@@ -1,0 +1,16 @@
+{
+  "name": "proxyecho-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Me",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.75.0",
+    "yargs": "^5.0.0"
+  },
+  "keywords": [],
+  "description": ""
+}
