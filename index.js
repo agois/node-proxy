@@ -13,6 +13,11 @@ let argv = require('yargs')
 
 let destinationUrl = argv.host + ":" + argv.port
 
+let path = require('path')
+let fs = require('fs')
+let logPath = argv.log && path.join(__dirname, argv.log)
+let logStream = logPath ? fs.createWriteStream(logPath) : process.stdout
+
 console.log('destinationUrl = '+destinationUrl)
 
 http.createServer((req, res) => {
@@ -23,8 +28,8 @@ http.createServer((req, res) => {
     req.pipe(res)
     // res.end('hello world\n')
 
-    process.stdout.write('\n\n\n' + JSON.stringify(req.headers))
-    req.pipe(process.stdout)
+    logStream.write('\n\n\n' + JSON.stringify(req.headers))
+    req.pipe(logStream, {end: false})
 }).listen(8000)
 
 http.createServer((req, res) => {
@@ -40,7 +45,7 @@ http.createServer((req, res) => {
     let outboundResponse = request(options)
     req.pipe(outboundResponse)
 
-    process.stdout.write(JSON.stringify(outboundResponse.headers))
-    outboundResponse.pipe(process.stdout)
+    logStream.write(JSON.stringify(outboundResponse.headers))
+    outboundResponse.pipe(logStream, {end: false})
     outboundResponse.pipe(res)
 }).listen(8001)
