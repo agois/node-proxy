@@ -3,6 +3,18 @@
 let http = require('http')
 let request = require('request')
 
+// Place near the top of your file, just below your other requires 
+let url = require('url')
+// Set a the default value for --host to 127.0.0.1
+let argv = require('yargs')
+    .default('host', '127.0.0.1')
+    .default('port', "8000")
+    .argv
+
+let destinationUrl = argv.host + ":" + argv.port
+
+console.log('destinationUrl = '+destinationUrl)
+
 http.createServer((req, res) => {
     console.log(`Request received at: ${req.url}`)
     for (let header in req.headers) {
@@ -14,8 +26,6 @@ http.createServer((req, res) => {
     process.stdout.write('\n\n\n' + JSON.stringify(req.headers))
     req.pipe(process.stdout)
 }).listen(8000)
-
-let destinationUrl = '127.0.0.1:8000'
 
 http.createServer((req, res) => {
   console.log(`Proxying request to: ${destinationUrl + req.url}`)
