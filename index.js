@@ -33,11 +33,16 @@ http.createServer((req, res) => {
 }).listen(8000)
 
 http.createServer((req, res) => {
-  console.log(`Proxying request to: ${destinationUrl + req.url}`)
+    let targetDestinationUrl = destinationUrl
+    if (req.headers['x-destination-url']) {
+        targetDestinationUrl = req.headers['x-destination-url']
+    }
+
+    console.log(`Proxying request to: ${targetDestinationUrl}`)
     // Proxy code
     let options = {
         headers: req.headers,
-        url: `http://${destinationUrl}${req.url}`
+        url: `http://${targetDestinationUrl}`
     }
     options.method = req.method
 
